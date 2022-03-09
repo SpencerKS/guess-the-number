@@ -3,6 +3,8 @@ import java.util.Scanner;
 public class GuessingGame {
 
     static boolean guessAgain = true;
+    boolean playAgain = false;
+    String invalid = "INVALID_INPUT";
 
     static GuessingGame game = new GuessingGame();
     Computer npc = new Computer();
@@ -13,14 +15,29 @@ public class GuessingGame {
         game.start();
     }
 
+    //using different methods to control the different points in the game
+
     public void start() {
         System.out.println("Hello! What is your name!");
-        player.setName(in.nextLine());
+        try {
+            player.setName(in.nextLine());
+        }catch(Exception e) {
+            System.out.println(invalid);
+            throw e;
+        }
+        if (player.getName().equals("")){
+            player.setName("whoever you are");
+        }
         play();
     }
 
     public void play() {
-        System.out.println("Well, " + player.getName() + ", I am thinking of a number between 1 and 20.");
+        if (playAgain) {
+            System.out.println("I am thinking of a number between 1 and 20.");
+        }
+        else {
+            System.out.println("Well, " + player.getName() + ", I am thinking of a number between 1 and 20.");
+        }
         npc.setNumber(Math.floor(Math.random()*20));
         System.out.println("Can you guess what it is?");
         guess();
@@ -28,7 +45,12 @@ public class GuessingGame {
 
     public void guess() {
         System.out.println("Take a guess: ");
-        player.setGuess(in.nextInt());
+        try {
+            player.setGuess(in.nextInt());
+        }catch (Exception e) {
+            System.out.println(invalid);
+            throw e;
+        }
         System.out.println(result());
         if (guessAgain) {
             guess();
@@ -61,12 +83,20 @@ public class GuessingGame {
 
     public void playAgain() {
         System.out.println("Would you like to play again?");
+        System.out.println("(please enter N twice if no)"); //for some reason, it doesn't take N or n the first time
         System.out.println("Y / N");
-        if (in.next().equalsIgnoreCase("Y")) {
+        if (in.nextLine().equals("Y") || in.nextLine().equals("y")) {
+            playAgain = true;
+            player.resetTries();
             play();
         }
-        else {
+        else if (in.nextLine().equals("N") || in.nextLine().equals("n")) {
             end();
+            //I don't know what's wrong with it, but I'll fix it later
+        }
+        else {
+            System.out.println(invalid);
+            playAgain();
         }
     }
 
@@ -110,5 +140,8 @@ class Player {
     }
     public String getTries() {
         return (this.tries == 1 ? "1 try." : (this.tries)+" tries.");
+    }
+    public void resetTries() {
+        this.tries = 1;
     }
 }
