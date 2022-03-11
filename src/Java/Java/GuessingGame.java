@@ -1,3 +1,5 @@
+package Java;
+
 import java.util.Scanner;
 
 public class GuessingGame {
@@ -51,7 +53,7 @@ public class GuessingGame {
             System.out.println(invalid);
             throw e;
         }
-        System.out.println(result());
+        System.out.println(result(player.getGuess(), npc.getNumber()));
         if (guessAgain) {
             guess();
         }
@@ -72,8 +74,8 @@ public class GuessingGame {
         }
     }
 
-    public String result() {
-        switch (game.compare(player.getGuess(), npc.getNumber())) {
+    public String result(int guess, int number) {
+        switch (game.compare(guess, number)) {
             case "TOO_HIGH" : player.incorrect(); guessAgain = true; return "Your guess is too high.";
             case "TOO_LOW" : player.incorrect(); guessAgain = true; return "Your guess is too low.";
             case "CORRECT" : guessAgain = false; return "You did it! You guessed my number in "+player.getTries();
