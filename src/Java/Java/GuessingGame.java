@@ -54,8 +54,11 @@ public class GuessingGame {
             throw e;
         }
         System.out.println(result(player.getGuess(), npc.getNumber()));
-        if (guessAgain) {
+        if (guessAgain && player.getTriesNum() <= 6) {
             guess();
+        }
+        else if (guessAgain && player.getTriesNum() > 6) {
+            lose();
         }
         else {
             playAgain();
@@ -83,18 +86,23 @@ public class GuessingGame {
         }
     }
 
+    public void lose() {
+        System.out.println("Sorry, you've failed to guess my number in 6 tries. You lose.");
+        System.out.println("Thank you for playing!");
+        end();
+    }
+
     public void playAgain() {
         System.out.println("Would you like to play again?");
-        System.out.println("(please enter N twice if no)"); //for some reason, it doesn't take N or n the first time
         System.out.println("Y / N");
-        if (in.nextLine().equals("Y") || in.nextLine().equals("y")) {
+        String input = in.next();
+        if (input.equals("Y") || input.equals("y")) {
             playAgain = true;
             player.resetTries();
             play();
         }
-        else if (in.nextLine().equals("N") || in.nextLine().equals("n")) {
+        else if (input.equals("N") || input.equals("n")) {
             end();
-            //I don't know what's wrong with it, but I'll fix it later
         }
         else {
             System.out.println(invalid);
@@ -142,6 +150,9 @@ class Player {
     }
     public String getTries() {
         return (this.tries == 1 ? "1 try." : (this.tries)+" tries.");
+    }
+    public int getTriesNum() {
+        return this.tries;
     }
     public void resetTries() {
         this.tries = 1;
